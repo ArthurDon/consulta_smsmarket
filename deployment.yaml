@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-smsmarket
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: smsmarket-pinstatus
+  template:
+    metadata:
+      labels:
+        app: smsmarket-pinstatus
+    spec:
+      containers:
+      - name: smsmarket-pinstatus
+        image: tucart/pinstatusapi1_app:v3
+        resources:
+          requests:
+            memory: 250Mi
+            cpu: 100m
+          limits:
+            memory: 250Mi
+            cpu: 100m
