@@ -2,6 +2,7 @@ from acesso_smsmarket import ConsultaSms
 from flask import  Flask, jsonify
 import requests
 from jsonschema import validate, exceptions
+import json
 
 app = Flask(__name__)
 
@@ -19,11 +20,11 @@ def consultar(msisdn):
     consult_smsmarket = consulta.consult_smsmarket(msisdn, url)
     return_format = consulta.return_format(consult_smsmarket)
 
-    return jsonify(return_format),200
+    return json.dumps(return_format),200
 
 @app.errorhandler(exceptions.ValidationError)
 def validation_error(e):
-    return jsonify({"message": "Telefone informado incorretamente"}), 400
+    return json.dumps({"message": "Telefone informado incorretamente"}), 400
 
 if __name__ == "__main__":
     app.run()

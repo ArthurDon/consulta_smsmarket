@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: smsmarket-pinstatus
-        image: tucart/pinstatusapi1_app:v3
+        image: tucart/pinstatusapi1_app:v4
         resources:
           requests:
             memory: 250Mi
