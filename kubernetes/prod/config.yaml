@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prod-status-pin-api-configmap
+data:
+  FLASK_RUN_HOST: '0.0.0.0'
+  FLASK_RUN_PORT: '80'
+  FLASK_ENV: 'production'

@@ -1,3 +1,3 @@
-from api_pin_status import app
+import pin_status_api.app as server
 
-run = app.run(debug='true',host="0.0.0.0", port=8080)
+app = server.create_app()

@@ -1,0 +1,48 @@
+kind: Gateway
+apiVersion: networking.istio.io/v1alpha3
+metadata:
+  name: status-pin-api-istio-gateway
+spec:
+  servers:
+    - port:
+        name: https
+        number: 443
+        protocol: HTTPS
+      hosts:
+        - "status-pin-api.whitelabel.com.br"
+      tls:
+        mode: SIMPLE
+        privateKey: /etc/istio/ingressgateway-certs/tls.key
+        serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
+    - port:
+        name: http
+        number: 80
+        protocol: HTTP
+      hosts:
+        - "status-pin-api.whitelabel.com.br"
+      tls:
+        httpsRedirect: false
+  selector:
+    istio: ingressgateway
+---
+kind: VirtualService
+apiVersion: networking.istio.io/v1alpha3
+metadata:
+  name: status-pin-api-virtual-service
+spec:
+  hosts:
+    - '*'
+  gateways:
+    - status-pin-api-istio-gateway
+  http:
+    - match:
+      - uri:
+          prefix: /
+      - uri:
+          prefix: /_health-check
+      route:
+        - destination:
+            host: prod-status-pin-api
+            port:
+              number: 80
+      timeout: 15s

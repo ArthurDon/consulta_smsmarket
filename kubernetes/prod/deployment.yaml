@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prod-status-pin-api-deployment
+spec:
+  template:
+    metadata:
+      name: prod-status-pin-api
+      labels:
+        app: prod-status-pin-api
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: cloud.google.com/gke-nodepool
+                    operator: In
+                    values:
+                      - env-prod-apps-high-scaling
+      tolerations:
+        - key: dedicated
+          operator: Equal
+          value: apps
+        - key: gke-preemptible
+          operator: Equal
+          value: "true"
+        - key: scalability
+          operator: Equal
+          value: high
+      containers:
+        - name: prod-status-pin-api-container-pod
+          image: us.gcr.io/fs-env-producao/status_pin_api:###BUILDNO###
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: prod-status-pin-api-configmap
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: 600m
+            requests:
+              memory: 200Mi
+              cpu: 400m
+  selector:
+    matchLabels:
+      app: prod-status-pin-api
+  replicas: 1
